@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{resources/fragments/layout}">
+<head>
+	<meta charset ="UTF-8">
+	<title>ExchangeMAsta</title>
+</head>
+
+<body>
+<main layout:fragment="content">
+	<section>
+		<h2>Select exchange</h2>
+		<p>Please select the desired exchange values below.</p>
+		<form th:action="@{/do-exchange}" th:object="${exchangeForm}" method="post">
+			<select th:field=*{fromCurrency}>
+				<option  value= "">Select a currency to exchange from</option>
+				<option  th:each="currencies : ${currencies}" th:text=${currencies} th:value= "${currencies}"></option>
+				
+			</select>
+			<span class="error" th:if="${#fields.hasErrors('fromCurrency')}"
+                      th:errors="*{fromCurrency}">fromCurrency Error</span>
+			<select th:field=*{toCurrency}>
+				<option value= "">Select a currency to exchange To</option>
+				<option  th:each="currencies : ${currencies}" th:value="${currencies}" th:text="${currencies}" ></option>
+			</select>
+			<span class="error" th:if="${#fields.hasErrors('toCurrency')}"
+                      th:errors="*{toCurrency}">toCurrency Error</span>
+                      
+			<div>
+				<p class="form">Amount: <input type="text" th:field="*{amount}"/>
+				<span class="error" th:if="${#fields.hasErrors('amount')}"
+                      th:errors="*{amount}">Amount Error</span></p>
+				
+			</div>
+			<p class="submit"><input type="submit" value="Exchange"/></p>
+			<span class="error" th:if="${#fields.hasErrors('global')}"
+                      th:errors="*{global}">toCurrency Error</span>
+		 </form>
+		 <div class="exchanged">
+		  	<p  >
+            	Exchanged: <span th:text="*{exchanged}">An Exchange is missing </span> 
+        	</p>
+        </div>
+   
+	</section>
+
+</main>
+</body>	
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{resources/fragments/layout}">
+<head>
+	<meta charset ="UTF-8">
+	<title>ExchangeMAsta</title>
+</head>
+
+<body>
+<main layout:fragment="content">
+	<section>
+		<h2>Current number of exchanges on ExchangeMASTA: <span th:text="*{count}"> Count missing</span> </h2>
+		<h2>Select Currencies to update exchange rates</h2>
+		<p>Please select the desired Currencies to update</p>
+		<form th:action="@{/update-rate}" th:object="${rateForm}" method="post">
+			<select th:field=*{fromCurrency}>
+				<option  value= "">Select a currency to exchange from</option>
+				<option  th:each="currencies : ${currencies}" th:text=${currencies} th:value= "${currencies}"></option>
+				
+			</select>
+			<span class="error" th:if="${#fields.hasErrors('fromCurrency')}"
+                      th:errors="*{fromCurrency}">fromCurrency Error</span>
+			
+			<select th:field=*{toCurrency}>
+				<option value= "">Select a currency to exchange To</option>
+				<option  th:each="currencies : ${currencies}" th:value="${currencies}" th:text="${currencies}" ></option>
+			</select>
+			<span class="error" th:if="${#fields.hasErrors('toCurrency')}"
+                      th:errors="*{toCurrency}">toCurrency Error</span>
+			<div>
+				<p class="form">Rate: <input type="text" th:field="*{rate}"/>
+				<span class="error" th:if="${#fields.hasErrors('rate')}"
+                      th:errors="*{rate}">Amount Error</span></p>
+			</div>
+			
+			<p class="submit"><input type="submit" value="Update"/></p>
+			<span class="error" th:if="${#fields.hasErrors('global')}"
+                      th:errors="*{global}">toCurrency Error</span>
+		 </form>
+		  <div class="exchanged">
+		  	<p>
+		  	<div>
+            	<div class="info">Updated Exchange Detail: <p th:if="${RateChange}">Updated!</p> </div>
+        		<p class="form" >
+            		From Currency: <span th:text="${RateChange?.fromCurrency}">Missing</span><br>
+            		To Currency: <span th:text="*{RateChange?.toCurrency}">Missing</span><br>
+            		rate: <span th:text="*{RateChange?.rate}">Missing</span><br>
+        		</p>
+        	</div>
+        </div>
+   
+	</section>
+
+</main>
+</body>	
+</html>

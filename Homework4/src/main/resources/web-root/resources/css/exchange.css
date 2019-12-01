@@ -1,0 +1,41 @@
+.form{
+	style="width: 127px; height: 19px;
+}
+.exchanged{
+	style="width: 127px; height: 19px;
+	position:relative;
+	float:right ;
+	width: 100%;
+	bottom:10%;
+	top:10%;
+}
+section p.form {
+    float: left;   
+    margin-left: 5%;
+    margin-bottom: 5px;
+}
+section span.error {
+    color: red;
+}
+
+footer {
+    border-top-style: solid;
+    border-top-width: 1px;
+    margin-top: 10%;
+
+    width: 80%;
+
+    top: 20px;
+    font-size: 0.8em;
+    font-style: italic;
+    text-align: center;
+}
+
+header{
+	 
+	text-align:center;
+}
+.headerText{
+	font-weight: bold;
+	font-size: 50px;
+}
