@@ -1,0 +1,49 @@
+
+POST http://localhost:8080/oauth/token?grant_type=password&username=test&password=123a
+Basic auth: foo 123
+
+http://localhost:8080/oauth/token?grant_type=refresh_token&refresh_token=Refreshtoken-goes-here
+Basic auth: foo 123
+
+BEARER TOKEN ^^
+
+POST http://localhost:8080/owners
+{
+    "surName": "bro",
+    "lastName": "bra",
+    "dogs": [{
+        
+        "name": "trea",
+        "age": 55,
+        "race": "Rotweiler"
+    }]
+}
+Put http://localhost:8080/owners/4
+{
+    "surName": "brraaa",
+    "lastName": "båra"
+   
+}
+         
+
+POST http://localhost:8080/dogs
+{
+    "name": "bro",
+    "age": "55",
+    "race": "bru",
+    "owner": {
+    	"ownerId":"4"
+    }
+    
+}
+
+PUT http://localhost:8080/dogs/1 
+{	
+    "name": "bro",
+    "age": "55",
+    "race": "bru",
+    "owner": {
+    	"ownerId":"2"
+    }
+    
+}
