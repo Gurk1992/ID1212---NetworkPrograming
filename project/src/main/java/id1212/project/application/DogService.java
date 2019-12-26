@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import id1212.project.domain.Dog;
 import id1212.project.domain.Owner;
 import id1212.project.domain.User;
-import id1212.project.presentation.DogResrouceAssembler;
 import id1212.project.presentation.OwnerResourceAssembler;
 import id1212.project.presentation.error.ErrorException;
 import id1212.project.repository.DogRepository;
@@ -34,25 +33,24 @@ OwnerRepository ownerRep;
 DogRepository dogRep;
 @Autowired
 private  OwnerResourceAssembler ownerAssembler;
-@Autowired
-private DogResrouceAssembler dogAssembler;
+
 @Autowired
 PasswordEncoder passwordEncoder;
 @Autowired
 UserRepository userRep;
 
-	public List<EntityModel<Owner>> findAllOwners() {
-		List<EntityModel<Owner>> owners = ownerRep.findAll().stream().map(ownerAssembler::toModel).collect(Collectors.toList());
+	public List<Owner> findAllOwners() {
+		List<Owner> owners = ownerRep.findAll();
 	
 		return owners;
 	}
 
-	public EntityModel<Owner> saveEntity(Owner newOwner) {
+	public Owner saveEntity(Owner newOwner) {
 		Owner owner = ownerRep.save(newOwner);
 			if(owner.equals(null)) {
 				throw new ErrorException("Owner could not be created with id: ", newOwner.getOwnerId());
 			}
-		return ownerAssembler.toModel(owner);
+		return owner;
 	}
 
 	public Owner findOwner(int id) {
@@ -63,7 +61,7 @@ UserRepository userRep;
 		return  owner.get();
 	}
 
-	public EntityModel<Owner> updateOwner(int id, Owner newOwner) {
+	public Owner updateOwner(int id, Owner newOwner) {
 		Owner updatedOwner= ownerRep.findById(id).map(owner -> {
 		
 			owner=setOwnerParam(owner, newOwner);
@@ -76,7 +74,7 @@ UserRepository userRep;
 			throw new ErrorException("Owner could not be updated with id: ", id);
 		}
 		
-		return  ownerAssembler.toModel(updatedOwner);
+		return updatedOwner;
 	}
 	
 	public void delete(int id) {
@@ -94,15 +92,14 @@ UserRepository userRep;
 /**
  *  DOG REQUESTS START HERE. MAYBE SPLIT UP into two services..
  */
-	public List<EntityModel<Dog>> findAllDogs(int id) {
-		List<EntityModel<Dog>> dogs = dogRep.findDogByOwner_OwnerId(id).stream()
-		.map(dogAssembler::toModel)
-		.collect(Collectors.toList());
+	public List<Dog> findAllDogsByOwner(int id) {
+		
+		List<Dog> dogs = dogRep.findDogByOwner_OwnerId(id);
 		return dogs;
 	}
 
-	public List<EntityModel<Dog>> findAllDogs() {
-		List<EntityModel<Dog>> dogs = dogRep.findAll().stream().map(dogAssembler::toModel).collect(Collectors.toList());
+	public List<Dog> findAllDogs() {
+		List<Dog> dogs = dogRep.findAll();
 		
 		return dogs;
 	}
@@ -116,7 +113,8 @@ UserRepository userRep;
 		return  dog.get();
 	}
 
-	public EntityModel<Dog> saveDog(Dog newDog) {
+
+	public Dog saveDog(Dog newDog) {
 		int ownerId = newDog.getOwner().getOwnerId();
 		Optional<Owner> owner = ownerRep.findById(ownerId);
 		if(owner.isPresent()) {
@@ -125,14 +123,13 @@ UserRepository userRep;
 			if(dog.equals(null)) {
 				throw new ErrorException("Dog could not be created with id: ", newDog.getId());
 			}
-		return dogAssembler.toModel(dog);
+		return dog;
 		}
 		else {
-			throw new ErrorException("Dog could not be created for owner with id: ", ownerId);
+			throw new ErrorException("Owner not found, dog could not be created for owner with id: ", ownerId);
 		}
 	}
-
-	public EntityModel<Dog> updateDog(int id, Dog newDog) {
+	public Dog updateDog(int id, Dog newDog) {
 		Dog updatedDog= dogRep.findById(id).map(dog -> {
 			dog=setDogParam(dog, newDog);
 			return dogRep.save(dog);
@@ -144,7 +141,7 @@ UserRepository userRep;
 			throw new ErrorException("Dog could not be updated with id: ", newDog.getId());
 		}
 		
-		return  dogAssembler.toModel(updatedDog);
+		return updatedDog;
 	}
 
 	public void deleteDog(int id) {

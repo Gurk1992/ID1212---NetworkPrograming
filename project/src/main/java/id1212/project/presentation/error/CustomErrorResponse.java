@@ -1,6 +1,7 @@
 package id1212.project.presentation.error;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -12,6 +13,7 @@ public class CustomErrorResponse {
     private LocalDateTime timestamp;
     private int status;
     private String error;
+	
     
   
 

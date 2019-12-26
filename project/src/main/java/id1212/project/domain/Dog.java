@@ -24,6 +24,7 @@ public class Dog {
 
 	@NotNull(message =" Name cannot be null")
 	@Size(min=1, message="name cannot be empty")
+	
 	private String name;
 	@NotNull(message =" Age cannot be null")
 	private int age;

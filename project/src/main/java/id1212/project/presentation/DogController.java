@@ -5,6 +5,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -27,26 +28,26 @@ import id1212.project.domain.Dog;
 
 
 
-
 @RestController
 public class DogController {
 	@Autowired
 	private DogResrouceAssembler assembler;
+	
 	@Autowired
 	private DogService service;
 	
 	@GetMapping("/dogs")
 	CollectionModel<EntityModel<Dog>> allDogs(){
-		List<EntityModel<Dog>> dogs = service.findAllDogs();
-		 return new CollectionModel<>(dogs, linkTo(methodOn(DogController.class).allDogs()).withSelfRel());
+		List<EntityModel<Dog>> dogs = service.findAllDogs().stream().map(assembler::toModel).collect(Collectors.toList());
+		return new CollectionModel<>(dogs, linkTo(methodOn(DogController.class).allDogs()).withSelfRel());
 	}
 	@PostMapping("/dogs")
 	@ResponseStatus(HttpStatus.CREATED)
 	EntityModel<?> newDog( @RequestBody @Valid Dog newDog) throws URISyntaxException{
-		System.out.println("hit?");
-		EntityModel<Dog> dog = service.saveDog(newDog);
 		
-		return dog;	
+		Dog dog = service.saveDog(newDog);
+		
+		return assembler.toModel(dog);	
 	}
 	@GetMapping("/dogs/{id}")
 	EntityModel<Dog> oneDog(@PathVariable int id) {
@@ -57,8 +58,8 @@ public class DogController {
 	@PutMapping("/dogs/{id}")
 	@ResponseStatus(HttpStatus.CREATED)
 	EntityModel<?> replaceDog(@Valid @RequestBody Dog newDog, @PathVariable int id) {
-		EntityModel<Dog> resource = service.updateDog(id, newDog);
-		return resource;	
+		Dog updatedDog = service.updateDog(id, newDog);
+		return assembler.toModel(updatedDog);	
 	}
 	
 	@DeleteMapping("/dogs/{id}")

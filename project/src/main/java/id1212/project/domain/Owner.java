@@ -17,6 +17,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -37,8 +38,10 @@ public class Owner {
 	private  int ownerId;
 	
 	@NotNull(message =" surname cannot be null")
+	@NotEmpty(message ="surname can not be empty")
 	private String surName;
 	@NotNull(message =" lastname cannot be null")
+	@NotEmpty(message ="lastname can not be empty")
 	private String lastName;
 	
 	@JsonIgnoreProperties(value = {"age", "race"}, allowSetters=true )
